@@ -80,7 +80,7 @@ This is an R Markdown document that details one workflow to fire an EC2 instance
 
 ### Install and prep for docker image
 
-  Now, if you do not already have a [Docker Hub account](https://hub.docker.com/), head over there and create one.  Now [download Docker](https://docs.docker.com/docker-for-mac/install/) to your machine.  Sign into the Docker Hub that is running on your machine.  If you have a Mac then it will be found in the top panel (see below)
+  Now, if you do not already have a [Docker Hub account](https://hub.docker.com/), head over there and create one.  Now [download Docker](https://docs.docker.com/docker-for-mac/install/) to your machine.  Sign into the Docker Hub application on your machine.  If you have a Mac then it will be found in the top panel (see below)
 
   <img src= "/Users/NateM/Dropbox/Professional/RScripts/Using-AWS/screenshots/Step9_Docker.png", width=25%, align = "center">
 
