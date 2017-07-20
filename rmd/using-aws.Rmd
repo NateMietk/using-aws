@@ -1,5 +1,5 @@
 ---
-title: 'Using AWS: an Earth Lab workflow'
+title: 'Using RStudio on AWS: an Earth Lab workflow'
 author: "Nathan Mietkiewicz"
 date: "7/19/2017"
 output:
@@ -13,105 +13,117 @@ fontsize: 14pt
 knitr::opts_chunk$set(echo = TRUE)
 ```
 
-This is an R Markdown document that details one workflow to fire an EC2 instance, load RStudio on that instance, and initiate a docker image that has all spatial dependencies needed for GIS work on AWS.  This workflow is truly Earth Lab specific, but can be adapted for any lab group.  Here there will be a mix between the AWS user interface and terminal command prompts.  Let's get started.
-
-### Log in
-
-  Well I guess, first thing is first.  [Log onto your account](https://732215511434.signin.aws.amazon.com/console) and click on the EC2 icon under **Compute**. 
+This is an R Markdown document that details one workflow to start an EC2 instance and load RStudio on that instance via Docker. 
+This workflow is truly Earth Lab specific, but can be adapted for any lab group.
 
 
-### Step 1: Choosing an AMI
+### Log in to Amazon Web Services
 
-  The first key step is to properly launch the correct Amazon Machine Image.  Within the quick start tab there are many AMI's that sit on various operating systems.  Depending upon what you will be running any of those may be the appropriate choice.  For this tutorial we will be using a publicly available docker image produce by the Earth Lab which sits on an Ubuntu OS.  For anyone who has the Earth Lab credentials, this docker image will be automatically be visible.  Select this to move on (highlighted in red).
-
-<img src= "/Users/NateM/Dropbox/Professional/RScripts/Using-AWS/screenshots/Step1_AMI.jpg", alt="some text"  width="4200" height="4200">
-
-
-### Step 2: Choosing an Instance type
-
-  This step may need some more thought in how you choose the right EC2 instance type, which is all dependent upon the processing you are hoping to accomplish on AWS.  After you have decided how much processing power you need, verify that it is [reasonably price](https://aws.amazon.com/ec2/pricing/on-demand/). There is quite a bit of [literature](https://aws.amazon.com/blogs/aws/choosing-the-right-ec2-instance-type-for-your-application/) out there to help explain all of the different types of instances, and how you should choose given the task you want to preform.  
-
-  I think, generally, the two main variable you are going to be interested in are nodes and memory.  If you want to do parallelizing of you code, the number of nodes will be critical to efficiently run the program.  If you have large data-sets you may want to opt for more memory.  And, of course, there may be combinations of those tasks you wish to accomplish/completely different tasks given your desires.  Make an informed choice is really the main point here.
-
-<img src= "/Users/NateM/Dropbox/Professional/RScripts/Using-AWS/screenshots/Step2_Instance.jpg", alt="some text"  width="4200" height="4200">
+Well I guess, first thing is first. 
+Log onto your AWS account using the sign-in link provided with your credentials, e.g., [the Earth Lab account sign-in page](https://732215511434.signin.aws.amazon.com/console) and click on the EC2 icon under **Compute**. 
 
 
-### Step 3: Configuring the Instance
+### Step 1: Choosing an Amazon Machine Image
 
-  This is a step that you can easily bypass.  Leave all as default for now.
+The first key step is to choose the correct Amazon Machine Image (AMI), which specifies the operating system and software initially installed on your EC2 instance. 
+Within the quick start tab there are many AMIs that sit on various operating systems. 
+Depending upon what you will be running any of those may be the appropriate choice. 
+For this tutorial we will be using a publicly available Docker image produce by the Earth Lab which sits on an Ubuntu OS, called `earthlab-docker`. 
+For anyone who has the Earth Lab credentials, this Docker image will be automatically be visible under the "My AMIs" tab. 
+Select this to move on (highlighted in red).
+
+<img src= "../screenshots/Step1_AMI.jpg", alt="some text"  width="4200" height="4200">
+
+
+### Step 2: Choosing an instance type
+
+Next, choose your EC2 instance type, which refers to the hardware specifications of your instance (e.g., the number of processor cores and the amount of RAM).
+After you have decided how much processing power you need, verify that it is [reasonably priced](https://aws.amazon.com/ec2/pricing/on-demand/). 
+There is quite a bit of [literature](https://aws.amazon.com/blogs/aws/choosing-the-right-ec2-instance-type-for-your-application/) out there to help explain all of the different types of instances, and how you should choose given the task you want to preform.  
+
+The two main variable you are going to be interested in are nodes and memory. 
+For parallel computation, the number of nodes will be critical. 
+If you have large data-sets that need to be loaded in memory you may want to opt for more RAM.
+
+<img src= "../screenshots/Step2_Instance.jpg", alt="some text"  width="4200" height="4200">
+
+
+### Step 3: Configuring the instance
+
+Leave all as default for now.
   
-  <img src= "/Users/NateM/Dropbox/Professional/RScripts/Using-AWS/screenshots/Step3_Config.jpg", alt="some text"  width="4200" height="4200">
+<img src= "../screenshots/Step3_Config.jpg", alt="some text"  width="4200" height="4200">
 
 
-### Step 4: Configuring the Storage
+### Step 4: Configuring the storage
 
-  Leave all as default for now.  10GB should be fine for whatever you are doing, but depending upon your tasks and data-sets involved you may want to increase the storage.  Here is [more information](http://docs.aws.amazon.com/AWSEC2/latest/WindowsGuide/add-instance-store-volumes.html) on how to chose the type and amount of storage, if you want to increase the capacity. 
+Leave all as default for now. 
+Thirty GB should be fine for whatever you are doing, but depending upon your tasks and data-sets involved you may want to increase the storage.  
+Here is [more information](http://docs.aws.amazon.com/AWSEC2/latest/WindowsGuide/add-instance-store-volumes.html) on how to chose the type and amount of storage, if you want to increase the capacity. 
   
-  <img src= "/Users/NateM/Dropbox/Professional/RScripts/Using-AWS/screenshots/Step4_Storage.jpg", alt="some text"  width="4200" height="4200">
+<img src= "../screenshots/Step4_Storage.jpg", alt="some text"  width="4200" height="4200">
 
 
 ### Step 5: Add project tags
 
-  Tags are very important and tremendously helpful, especially when there are a lot of other groups using the same AWS account or you have multiple instances running for different projects.  A short and sweet description of what the instance will be tailored too is all that is necessary during this step.  It will instill a best practice and save you some gray hairs down the line.
-  
-  <img src= "/Users/NateM/Dropbox/Professional/RScripts/Using-AWS/screenshots/Step5_Tags.jpg", alt="some text"  width="4200" height="4200">
-  
-### Step 6: Adding Rules
+Tags are important to identify your instance, especially when there are a lot of other groups using the same AWS account or you have multiple instances running for different projects. 
+Tags are key-value pairs, and you at least want to have a "Name" tage, where the key is "Name" and the value is some meaningful name that you choose, e.g., "surface-adj-distance".
 
-  This is probably the most critical part in this whole workflow. By properly defining the HTTP port, our [spatial docker image](https://hub.docker.com/r/earthlab/r-spatial-aws/) can interact with the EC2 instance. This is done by creating an "Add Rule" > "Custom TCP I".  Leave the "SSH" type as default.  Now you want to specify that the port for the "Custom TCP I" is **8787**.
+<img src= "../screenshots/Step5_Tags.jpg", alt="some text"  width="4200" height="4200">
 
-  <img src= "/Users/NateM/Dropbox/Professional/RScripts/Using-AWS/screenshots/Step6_AddRule.jpg", alt="some text"  width="4200" height="4200">
+  
+### Step 6: Configuring your instance's security group
+
+At this step, you will determine how you and others can connect to your instance. 
+To run RStudio Server and connect via a web browser, select the pre-configured "rstudio" security group.
 
 
 ### Step 7: Creating an SSH key pair
 
-  Upon your first EC2 instance launch, you will create a [key pair](https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/ec2-key-pairs.html?console_help=true) file (.pem), which is effectively the passcode to launch EC2 instances remotely.  Once this is generated, put it somewhere on you computer that will be out of the way and safe.  I recommend something like MyDocs>AWS>file-name.pem. I would also suggest naming it something that you will recognize and be specific to you (name, initials, etc.). After this has been accomplished, every other time you create an instance all you will need to do is select the pem file from the drop down bar.  Easy!
+Upon your first EC2 instance launch, you will create a [key pair](https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/ec2-key-pairs.html?console_help=true) file (.pem), which is effectively the passcode to connect to your EC2 instance. 
+Once this is generated, put it somewhere on you computer that will be out of the way and safe.  
+I recommend something like MyDocs>AWS>file-name.pem. 
+I would also suggest naming it something that you will recognize and be specific to you (name, initials, etc.). 
+After this has been accomplished, every other time you create an instance all you will need to do is select the pem file from the drop down bar.  
+Easy!
 
-  <img src= "/Users/NateM/Dropbox/Professional/RScripts/Using-AWS/screenshots/Step7_KeyPair.jpg", alt="some text"  width=50%>
-
-
-### Step 8: Successfully launched an EC2 instance
-
-  Congratulations, you have successfully launched your first EC2 instance on AWS.  A screen will appear with the name of the instance and all pertinent information associated with that particular instance.  In the screen shot below, make note of the public DNS associated with this particular EC2 instance, we will be needing it in the next steps 
-    
-  `ec2-52-32-104-200.us-west-2.compute.amazonaws.com`
-
-  <img src= "/Users/NateM/Dropbox/Professional/RScripts/Using-AWS/screenshots/Step8_LaunchInstance.jpg", alt="some text"  width="4200" height="4200">
-  <img src= "/Users/NateM/Dropbox/Professional/RScripts/Using-AWS/screenshots/Step8a_LaunchInstance.jpg", alt="some text"  width="4200" height="4200">
-
-### Install and prep for docker image
-
-  Now, if you do not already have a [Docker Hub account](https://hub.docker.com/), head over there and create one.  Now [download Docker](https://docs.docker.com/docker-for-mac/install/) to your machine.  Sign into the Docker Hub application on your machine.  If you have a Mac then it will be found in the top panel (see below)
-
-  <img src= "/Users/NateM/Dropbox/Professional/RScripts/Using-AWS/screenshots/Step9_Docker.jpg", width=25%, align = "center">
+<img src= "../screenshots/Step7_KeyPair.jpg", alt="some text"  width=50%>
 
 
-### Terminal time
+### Step 8: Launch your EC2 instance
 
-  Install and load the Docker container: [r-spatial-aws](https://hub.docker.com/r/earthlab/r-spatial-aws/)
+Congratulations, you have successfully launched your first EC2 instance on AWS. 
+A screen will appear with the name of the instance and all pertinent information associated with that particular instance.
+Make note of the public DNS associated with your particular EC2 instance (for example, `ec2-52-32-104-200.us-west-2.compute.amazonaws.com`).
+
+<img src= "../screenshots/Step8_LaunchInstance.jpg", alt="some text"  width="4200" height="4200">
+
+<img src= "../screenshots/Step8a_LaunchInstance.jpg", alt="some text"  width="4200" height="4200">
+
+
+### Connecting to your instance
+
+Next we will access our .pem file and allow public read permission so that AWS can compare our part of the key pair to theirs.
+In a terminal, run the following command:
   
-  `docker pull earthlab/r-spatial-aws`
-  `docker run -i -t earthlab/r-spatial-aws /bin/bash`
+```
+chmod 600 /point/to/path/*.pem
+```
   
-  Now we need to access our .pem file, ssh into our EC2 instance, and launch our Docker container containing all of the spatial libraries needed for analysis. 
+Then to connect to your instance as user "ubuntu", while providing your key pair:
   
-  Now in terminal type:
+`ssh -i /point/to/path/*.pem unbuntu@ec2-52-32-104-200.us-west-2.compute.amazonaws.com`
   
-  `chmod 600 /point/to/path/*.pem`
+You will need to replace the `ec2-52-32-104-200.us-west-2.compute.amazonaws.com` with your instances public DNS (IPv4) address, which you can get from the instance description in the EC2 instance dashboard.
   
-Then:
+Once you've connected to your instance, you can launch the Docker container with RStudio via:
   
-  `ssh -i /point/to/path/*.pem unbuntu@ec2-52-32-104-200.us-west-2.compute.amazonaws.com`
-  
-  You will need to change the `ec2-52-32-104-200.us-west-2.compute.amazonaws.com` based on your particular instance.  
-  
-  Now let's launch the Docker container on top of our EC2 instance by:
-  
-  `docker run -d -p 8787:8787 earthlab/r-spatial-aws`
-  
-### Final Step
+`docker run -d -p 8787:8787 earthlab/r-spatial-aws`
 
-  Now that we have successfully created our EC2 instance which now sits on our spatial Docker container - let's kick it off!
+
+### Connecting to RStudio via web browser
+
+Now that we have successfully created our EC2 instance which now sits on our spatial Docker container - let's kick it off!
   
   1. Open your favorite web browser
   
@@ -127,10 +139,17 @@ Then:
   **Voila!*** You are now running version of RStudio wrapped in a Docker container all on AWS!
 
 
-### Some additional documents:
+### Final step: securing your RStudio server
+
+Currently, anybody with your public DNS can log in to your instance with the username "rstudio" and password "rstudio". 
+As a final step, **you need to change the default password to secure your instance**. 
+To do this, you can use the drop-down menu to open a terminal: Tools > Shell...
+
+Then in your terminal, type `passwd`.
+You will be prompted to enter the current password (rstudio), and asked to enter and then re-enter a new password. 
+
+
+
+### Additional resources
 
   Matt Strimas-Mackey blog [**1**](http://strimas.com/r/rstudio-cloud-1/) and [**2**](http://strimas.com/r/rstudio-cloud-2/)
-
-  
-  
-  
