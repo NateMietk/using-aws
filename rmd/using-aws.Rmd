@@ -23,7 +23,7 @@ This is an R Markdown document that details one workflow to fire an EC2 instance
 
   The first key step is to properly launch the correct Amazon Machine Image.  Within the quick start tab there are many AMI's that sit on various operating systems.  Depending upon what you will be running any of those may be the appropriate choice.  For this tutorial we will be using a publicly available docker image produce by the Earth Lab which sits on an Ubuntu OS.  For anyone who has the Earth Lab credentials, this docker image will be automatically be visible.  Select this to move on (highlighted in red).
 
-<img src= "/Users/NateM/Dropbox/Professional/RScripts/Using-AWS/screenshots/Step1_AMI.png", alt="some text"  width="4200" height="4200">
+<img src= "/Users/NateM/Dropbox/Professional/RScripts/Using-AWS/screenshots/Step1_AMI.jpg", alt="some text"  width="4200" height="4200">
 
 
 ### Step 2: Choosing an Instance type
@@ -32,41 +32,41 @@ This is an R Markdown document that details one workflow to fire an EC2 instance
 
   I think, generally, the two main variable you are going to be interested in are nodes and memory.  If you want to do parallelizing of you code, the number of nodes will be critical to efficiently run the program.  If you have large data-sets you may want to opt for more memory.  And, of course, there may be combinations of those tasks you wish to accomplish/completely different tasks given your desires.  Make an informed choice is really the main point here.
 
-<img src= "/Users/NateM/Dropbox/Professional/RScripts/Using-AWS/screenshots/Step2_Instance.png", alt="some text"  width="4200" height="4200">
+<img src= "/Users/NateM/Dropbox/Professional/RScripts/Using-AWS/screenshots/Step2_Instance.jpg", alt="some text"  width="4200" height="4200">
 
 
 ### Step 3: Configuring the Instance
 
   This is a step that you can easily bypass.  Leave all as default for now.
   
-  <img src= "/Users/NateM/Dropbox/Professional/RScripts/Using-AWS/screenshots/Step3_Config.png", alt="some text"  width="4200" height="4200">
+  <img src= "/Users/NateM/Dropbox/Professional/RScripts/Using-AWS/screenshots/Step3_Config.jpg", alt="some text"  width="4200" height="4200">
 
 
 ### Step 4: Configuring the Storage
 
   Leave all as default for now.  10GB should be fine for whatever you are doing, but depending upon your tasks and data-sets involved you may want to increase the storage.  Here is [more information](http://docs.aws.amazon.com/AWSEC2/latest/WindowsGuide/add-instance-store-volumes.html) on how to chose the type and amount of storage, if you want to increase the capacity. 
   
-  <img src= "/Users/NateM/Dropbox/Professional/RScripts/Using-AWS/screenshots/Step4_Storage.png", alt="some text"  width="4200" height="4200">
+  <img src= "/Users/NateM/Dropbox/Professional/RScripts/Using-AWS/screenshots/Step4_Storage.jpg", alt="some text"  width="4200" height="4200">
 
 
 ### Step 5: Add project tags
 
   Tags are very important and tremendously helpful, especially when there are a lot of other groups using the same AWS account or you have multiple instances running for different projects.  A short and sweet description of what the instance will be tailored too is all that is necessary during this step.  It will instill a best practice and save you some gray hairs down the line.
   
-  <img src= "/Users/NateM/Dropbox/Professional/RScripts/Using-AWS/screenshots/Step5_Tags.png", alt="some text"  width="4200" height="4200">
+  <img src= "/Users/NateM/Dropbox/Professional/RScripts/Using-AWS/screenshots/Step5_Tags.jpg", alt="some text"  width="4200" height="4200">
   
 ### Step 6: Adding Rules
 
   This is probably the most critical part in this whole workflow. By properly defining the HTTP port, our [spatial docker image](https://hub.docker.com/r/earthlab/r-spatial-aws/) can interact with the EC2 instance. This is done by creating an "Add Rule" > "Custom TCP I".  Leave the "SSH" type as default.  Now you want to specify that the port for the "Custom TCP I" is **8787**.
 
-  <img src= "/Users/NateM/Dropbox/Professional/RScripts/Using-AWS/screenshots/Step6_AddRule.png", alt="some text"  width="4200" height="4200">
+  <img src= "/Users/NateM/Dropbox/Professional/RScripts/Using-AWS/screenshots/Step6_AddRule.jpg", alt="some text"  width="4200" height="4200">
 
 
 ### Step 7: Creating an SSH key pair
 
   Upon your first EC2 instance launch, you will create a [key pair](https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/ec2-key-pairs.html?console_help=true) file (.pem), which is effectively the passcode to launch EC2 instances remotely.  Once this is generated, put it somewhere on you computer that will be out of the way and safe.  I recommend something like MyDocs>AWS>file-name.pem. I would also suggest naming it something that you will recognize and be specific to you (name, initials, etc.). After this has been accomplished, every other time you create an instance all you will need to do is select the pem file from the drop down bar.  Easy!
 
-  <img src= "/Users/NateM/Dropbox/Professional/RScripts/Using-AWS/screenshots/Step7_KeyPair.png", alt="some text"  width=50%>
+  <img src= "/Users/NateM/Dropbox/Professional/RScripts/Using-AWS/screenshots/Step7_KeyPair.jpg", alt="some text"  width=50%>
 
 
 ### Step 8: Successfully launched an EC2 instance
@@ -75,14 +75,14 @@ This is an R Markdown document that details one workflow to fire an EC2 instance
     
   `ec2-52-32-104-200.us-west-2.compute.amazonaws.com`
 
-  <img src= "/Users/NateM/Dropbox/Professional/RScripts/Using-AWS/screenshots/Step8_LaunchInstance.png", alt="some text"  width="4200" height="4200">
-  <img src= "/Users/NateM/Dropbox/Professional/RScripts/Using-AWS/screenshots/Step8a_LaunchInstance.png", alt="some text"  width="4200" height="4200">
+  <img src= "/Users/NateM/Dropbox/Professional/RScripts/Using-AWS/screenshots/Step8_LaunchInstance.jpg", alt="some text"  width="4200" height="4200">
+  <img src= "/Users/NateM/Dropbox/Professional/RScripts/Using-AWS/screenshots/Step8a_LaunchInstance.jpg", alt="some text"  width="4200" height="4200">
 
 ### Install and prep for docker image
 
   Now, if you do not already have a [Docker Hub account](https://hub.docker.com/), head over there and create one.  Now [download Docker](https://docs.docker.com/docker-for-mac/install/) to your machine.  Sign into the Docker Hub application on your machine.  If you have a Mac then it will be found in the top panel (see below)
 
-  <img src= "/Users/NateM/Dropbox/Professional/RScripts/Using-AWS/screenshots/Step9_Docker.png", width=25%, align = "center">
+  <img src= "/Users/NateM/Dropbox/Professional/RScripts/Using-AWS/screenshots/Step9_Docker.jpg", width=25%, align = "center">
 
 
 ### Terminal time
