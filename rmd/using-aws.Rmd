@@ -106,9 +106,7 @@ Make note of the public DNS associated with your particular EC2 instance (for ex
 Next we will access our .pem file and allow public read permission so that AWS can compare our part of the key pair to theirs.
 In a terminal, run the following command:
   
-```
-chmod 600 /point/to/path/*.pem
-```
+`chmod 600 /point/to/path/*.pem`
   
 Then to connect to your instance as user "ubuntu", while providing your key pair:
   
